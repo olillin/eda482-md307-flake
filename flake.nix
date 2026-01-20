@@ -10,23 +10,20 @@
     nixpkgs,
   }: let
     system = "x86_64-linux";
-    pkgs = import nixpkgs {inherit system;};
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
+    inherit (pkgs) lib stdenv;
 
     mdx07-binaries = pkgs.callPackage ./mdx07-binaries.nix {};
     riscv32-gcc = pkgs.callPackage ./riscv32-gcc.nix {};
   in {
     packages.${system} = {
       inherit mdx07-binaries riscv32-gcc;
-
-      mdx07-binaries = mdx07-binaries;
-      riscv32-gcc = riscv32-gcc;
     };
 
-    modules.${system}.default = {
-      environment.variables = {
-        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
-      };
-
+    nixosModules.default = {
       environment.systemPackages = with pkgs; [
         gcc-arm-embedded
         gnumake
@@ -37,10 +34,25 @@
       ];
     };
 
-    homeModules.${system}.default = {
+    homeModules.default = {
       programs.vscode = {
         enable = true;
-        profiles.md307 = {
+
+
+        # Override vscode package to add LD_LIBRARY_PATH
+        package = pkgs.vscode.overrideAttrs (old: {
+          nativeBuildInputs = (old.nativeBuildInputs or []) ++ [
+            pkgs.makeWrapper
+          ];
+
+          postInstall = (old.postInstall or "") + ''
+            wrapProgram $out/bin/code \
+              --suffix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ stdenv.cc.cc.lib ]}
+          '';
+        });
+
+        mutableExtensionsDir = false;
+        profiles.default = {
           userSettings = {
             "mdx07-templates.autoConfigEnabled" = false;
             "mdx07-templates.armToolchainPath" = "${pkgs.gcc-arm-embedded}/bin/";
@@ -57,7 +69,7 @@
               ms-vscode.cpptools
               zhwu95.riscv
             ]
-            ++ (vscode-utils.extensionsFromVscodeMarketplace [
+            ++ (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
               {
                 name = "mdx07-templates";
                 publisher = "BeanArch";

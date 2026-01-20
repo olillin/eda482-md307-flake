@@ -8,11 +8,12 @@ Add the flake input to your `flake.nix`:
 
 ```nix
 {
-  inputs.md307.url = "https://github.com/olillin/eda482-md307-flake";
+  inputs.md307.url = "github:olillin/eda482-md307-flake";
 }
 ```
 
-Add the system module to `configuration.nix` install everything necessary:
+Add the system module to `configuration.nix` which will install the necessary
+libraries and toolchains:
 
 ```
 { pkgs, inputs, ... }:
@@ -24,8 +25,8 @@ Add the system module to `configuration.nix` install everything necessary:
 ```
     
 
-Also add the Home Manager module, this will install extensions for
-Visual Studio Code:
+Also add the Home Manager module, this will install the extensions for
+Visual Studio Code and set the relevant paths:
 
 ```
 { pkgs, inputs, ... }:
@@ -38,4 +39,11 @@ Visual Studio Code:
   };
 }
 ```
+
+Rebuild your system, you can now start Visual Studio Code and everything should
+be set up for you.
+
+> [!NOTE]  
+> You do not need to run the **MDx07: Install MD307 Development Tools** command
+> in VSCode, everything is already installed and linked for you.
 
