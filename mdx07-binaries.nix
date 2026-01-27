@@ -46,8 +46,8 @@ in
 
     # Only the linux‑x64 dir is needed for x86_64‑linux
     installPhase = ''
-      mkdir -p $out
-      cp -R linux-x64/* $out/
+      mkdir -p $out/bin
+      cp -R linux-x64/* $out/bin/
     '';
 
     meta = with lib; {

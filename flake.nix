@@ -62,7 +62,7 @@
             "mdx07-templates.makePath" = "${pkgs.gnumake}/bin/";
             "mdx07-templates.openocdPath" = "${pkgs.openocd}/bin/";
             "mdx07-templates.riscvToolchainPath" = "${riscv32-gcc}/bin/";
-            "mdx07-templates.simserverPath" = "${mdx07-binaries}/simserver";
+            "mdx07-templates.simserverPath" = "${mdx07-binaries}/bin/simserver";
           };
 
           extensions = with pkgs.vscode-extensions;
