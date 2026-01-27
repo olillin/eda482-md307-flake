@@ -38,17 +38,20 @@
       programs.vscode = {
         enable = true;
 
-
         # Override vscode package to add LD_LIBRARY_PATH
         package = pkgs.vscode.overrideAttrs (old: {
-          nativeBuildInputs = (old.nativeBuildInputs or []) ++ [
-            pkgs.makeWrapper
-          ];
+          nativeBuildInputs =
+            (old.nativeBuildInputs or [])
+            ++ [
+              pkgs.makeWrapper
+            ];
 
-          postInstall = (old.postInstall or "") + ''
-            wrapProgram $out/bin/code \
-              --suffix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ stdenv.cc.cc.lib ]}
-          '';
+          postInstall =
+            (old.postInstall or "")
+            + ''
+              wrapProgram $out/bin/code \
+                --suffix LD_LIBRARY_PATH : ${lib.makeLibraryPath [stdenv.cc.cc.lib]}
+            '';
         });
 
         mutableExtensionsDir = false;
