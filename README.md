@@ -1,6 +1,8 @@
 # EDA482 MD307 Flake
 
-Development flake for EDA482 Machine oriented programming course.
+Nix flake for EDA482 Machine oriented programming course.
+
+Includes simserver, including desktop entry, RISC-V32 toolchain and VSCode extensions and configuration.
 
 ## Installation
 
@@ -8,7 +10,7 @@ Add the flake input to your `flake.nix`:
 
 ```nix
 {
-  inputs.md307.url = "github:olillin/eda482-md307-flake";
+  inputs.md307.url = "github:NixAtChalmers/eda482-md307-flake";
 }
 ```
 
